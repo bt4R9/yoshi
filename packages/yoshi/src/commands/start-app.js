@@ -45,7 +45,8 @@ const Server = require('../server-process');
 
 const host = '0.0.0.0';
 
-const https = cliArgs.https || project.servers.cdn.ssl;
+const appHttps = cliArgs.https;
+const cdnHttps = project.servers.cdn.ssl || false;
 
 function watchPublicFolder() {
   const watcher = chokidar.watch(PUBLIC_DIR, {
@@ -93,7 +94,7 @@ module.exports = async () => {
   });
 
   // Configure compilation
-  const multiCompiler = createCompiler([clientConfig, serverConfig], { https });
+  const multiCompiler = createCompiler([clientConfig, serverConfig], { appHttps, cdnHttps });
   const compilationPromise = waitForCompilation(multiCompiler);
 
   const [clientCompiler, serverCompiler] = multiCompiler.compilers;
@@ -105,7 +106,7 @@ module.exports = async () => {
   const devServer = await createDevServer(clientCompiler, {
     publicPath: clientConfig.output.publicPath,
     port: project.servers.cdn.port,
-    https,
+    https: cdnHttps,
     host,
   });
 
@@ -198,7 +199,7 @@ module.exports = async () => {
   }
 
   // Once it started, open up the browser
-  openBrowser(cliArgs.url || `${https ? 'https' : 'http'}://localhost:${PORT}`);
+  openBrowser(cliArgs.url || `${appHttps ? 'https' : 'http'}://localhost:${PORT}`);
 
   return {
     persistent: true,

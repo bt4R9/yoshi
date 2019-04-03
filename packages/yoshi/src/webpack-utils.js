@@ -12,7 +12,7 @@ const WebpackDevServer = require('webpack-dev-server');
 
 const isInteractive = process.stdout.isTTY;
 
-function createCompiler(config, { https }) {
+function createCompiler(config, { appHttps, cdnHttps }) {
   let compiler;
 
   try {
@@ -44,9 +44,13 @@ function createCompiler(config, { https }) {
       console.log(chalk.green('Compiled successfully!'));
 
       if (isInteractive) {
-        const serverUrls = prepareUrls('http', '0.0.0.0', PORT);
+        const serverUrls = prepareUrls(
+          appHttps ? 'https' : 'http',
+          '0.0.0.0',
+          PORT,
+        );
         const devServerUrls = prepareUrls(
-          https ? 'https' : 'http',
+          cdnHttps ? 'https' : 'http',
           '0.0.0.0',
           project.servers.cdn.port,
         );
