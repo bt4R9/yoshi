@@ -94,7 +94,10 @@ module.exports = async () => {
   });
 
   // Configure compilation
-  const multiCompiler = createCompiler([clientConfig, serverConfig], { appHttps, cdnHttps });
+  const multiCompiler = createCompiler([clientConfig, serverConfig], {
+    appHttps,
+    cdnHttps,
+  });
   const compilationPromise = waitForCompilation(multiCompiler);
 
   const [clientCompiler, serverCompiler] = multiCompiler.compilers;
@@ -199,7 +202,9 @@ module.exports = async () => {
   }
 
   // Once it started, open up the browser
-  openBrowser(cliArgs.url || `${appHttps ? 'https' : 'http'}://localhost:${PORT}`);
+  openBrowser(
+    cliArgs.url || `${appHttps ? 'https' : 'http'}://localhost:${PORT}`,
+  );
 
   return {
     persistent: true,
